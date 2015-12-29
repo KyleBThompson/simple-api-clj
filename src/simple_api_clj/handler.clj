@@ -2,10 +2,14 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [cheshire.core :as json]
+            [cheshire.core :refer [generate-string]]
+            [cheshire.generate :refer [add-encoder encode-str]]
             [simple-api-clj.post :as post]
             [ring.middleware.json :as middleware]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]])
   (:import org.bson.types.ObjectId))
+
+(add-encoder org.bson.types.ObjectId encode-str) ;so ObjectId can be enconded to json
 
 (def to-json json/generate-string)
 
@@ -21,6 +25,12 @@
     {:status 200
      :headers {"Content-Type" "application/json"}
      :body (to-json (assoc post :_id (str id)))}))
+
+(defn fetch-all []
+  (let [posts (post/fetch-posts)]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (to-json {:list posts} )}))
 
 (defn delete [id]
   (let [object-id (ObjectId. id)
@@ -39,6 +49,7 @@
   (GET "/" [] "Hello World")
   (POST "/posts" {params :body} (create params))
   (GET "/posts/:id" [id] (fetch id))
+  (GET "/posts" [] (fetch-all))
   (DELETE "/posts/:id" [id] (delete id))
   (route/not-found "Not Found"))
 

@@ -6,6 +6,6 @@
 
 (deftest persist-test
   (let [id (create { :title "Foo" })
-        retrieved (fetch id)]
+        retrieved (fetch-post id)]
     (testing "Inserts and retrieves a document."
       (is (= (retrieved :title) "Foo")))))
