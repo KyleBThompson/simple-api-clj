@@ -13,14 +13,20 @@
   (let [id (post/create params)]
     {:status 201
      :headers {"Content-Type" "application/json"}
-     :body (to-json (assoc params :_id (str id)))}))
+     :body (to-json (assoc params :_id (str id) :links {:self (str "/posts/" id)}))}))
 
 (defn fetch [id]
   (let [object-id (ObjectId. id)
-        post (post/fetch object-id)]
+        post (post/fetch-post object-id)]
     {:status 200
      :headers {"Content-Type" "application/json"}
      :body (to-json (assoc post :_id (str id)))}))
+
+(defn delete [id]
+  (let [object-id (ObjectId. id)
+        post (post/delete-post object-id)]
+    {:status 204
+     :headers {"Content-Type" "application/json"}}))
 
 (defroutes app-routes
   (POST "/" request
@@ -33,6 +39,7 @@
   (GET "/" [] "Hello World")
   (POST "/posts" {params :body} (create params))
   (GET "/posts/:id" [id] (fetch id))
+  (DELETE "/posts/:id" [id] (delete id))
   (route/not-found "Not Found"))
 
 (def app

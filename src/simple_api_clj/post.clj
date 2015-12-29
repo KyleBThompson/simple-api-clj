@@ -5,12 +5,16 @@
 
 (defn init-db [name]
   (mg/connect!)
-  (mg/set-db! (mg/get-db name)) (println "init-db"))
+  (mg/set-db! (mg/get-db name)))
 
-(defn fetch [id]
+(defn fetch-post [id]
+	(println (str "Id is " id))
   (mc/find-one-as-map "posts" { :_id id }))
 
 (defn create [post]
   (let [id (ObjectId.)]
     (mc/insert "posts" (assoc post :_id id))
     id))
+
+(defn delete-post [id]
+  (mc/remove-by-id "posts" id))
