@@ -4,20 +4,20 @@
   (:import [org.bson.types ObjectId]))
 
 (defn init-db [name]
-  (mg/connect!)
-  (mg/set-db! (mg/get-db name)))
+  (def conn (mg/connect))
+  (def db   (mg/get-db conn name)))
 
 (defn fetch-post [id]
 	(println (str "Id is " id))
-  (mc/find-one-as-map "posts" { :_id id }))
+  (mc/find-one-as-map db "posts" { :_id id }))
 
 (defn fetch-posts []
-  (mc/find-maps "posts" {}))
+  (mc/find-maps db "posts" {}))
 
 (defn create [post]
   (let [id (ObjectId.)]
-    (mc/insert "posts" (assoc post :_id id))
+    (mc/insert db "posts" (assoc post :_id id))
     id))
 
 (defn delete-post [id]
-  (mc/remove-by-id "posts" id))
+  (mc/remove-by-id db "posts" id))

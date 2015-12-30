@@ -39,17 +39,10 @@
      :headers {"Content-Type" "application/json"}}))
 
 (defroutes app-routes
-  (POST "/" request
-        (let [name (or (get-in request [:params :name])
-                       (get-in request [:body :name])
-                       "John Doe")]
-          {:status 200
-           :body {:name name
-                  :desc (str "The name you sent to me was " name)}}))
   (GET "/" [] "Hello World")
-  (POST "/posts" {params :body} (create params))
   (GET "/posts/:id" [id] (fetch id))
   (GET "/posts" [] (fetch-all))
+  (POST "/posts" {params :body} (create params))
   (DELETE "/posts/:id" [id] (delete id))
   (route/not-found "Not Found"))
 

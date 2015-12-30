@@ -7,7 +7,7 @@
                  [ring/ring-json "0.3.1"]
                  [ring/ring-defaults "0.1.5"]
                  [cheshire "5.1.1"]
-                 [com.novemberain/monger "1.5.0"]]
+                 [com.novemberain/monger "3.0.0-rc2"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler simple-api-clj.handler/app
          :init simple-api-clj.core/init}
